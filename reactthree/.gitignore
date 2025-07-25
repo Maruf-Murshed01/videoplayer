@@ -2,10 +2,12 @@
 logs
 *.log
 npm-debug.log*
+node_modules
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+seaa.mp4
 
 node_modules
 dist
