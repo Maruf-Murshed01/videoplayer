@@ -51,10 +51,10 @@ const Forward5Icon = () => (
 
 const VideoPlayer = ({ 
   src = "/moun.mp4", 
-  width = 1400, 
-  height = 800, 
   title = "Video Player",
-  style = {} 
+  style = {},
+  aspectRatio = "16/9", // New prop for aspect ratio control
+  maxWidth = "100%"     // New prop for maximum width
 }) => {
   const videoRef = useRef(null)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -139,19 +139,35 @@ const VideoPlayer = ({
   }
 
   return (
-    <div className="video-container" style={{ margin: '20px 0', position: 'relative', ...style }}>
-      <h2>{title}</h2>
-      <div style={{ position: 'relative', display: 'inline-block' }}>
+    <div 
+      className="video-container" 
+      style={{ 
+        margin: '20px auto', 
+        padding: '0 20px',
+        maxWidth: maxWidth,
+        width: '100%',
+        boxSizing: 'border-box',
+        ...style 
+      }}
+    >
+      <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>{title}</h2>
+      <div style={{ 
+        position: 'relative', 
+        width: '100%',
+        aspectRatio: aspectRatio,
+        maxWidth: '100%',
+        margin: '0 auto'
+      }}>
         <video 
           ref={videoRef}
-          width={width} 
-          height={height}
           style={{ 
-            maxWidth: '100%', 
-            height: 'auto',
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain', // Ensures video maintains aspect ratio and fits within container
             border: '2px solid #646cff',
             borderRadius: '8px',
-            display: 'block'
+            display: 'block',
+            backgroundColor: '#000' // Black background for letterboxing if needed
           }}
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
@@ -164,19 +180,27 @@ const VideoPlayer = ({
         <div style={{
           position: 'absolute',
           bottom: '-130px',
-          left: '10px',
-          right: '10px',
+          left: '0',
+          right: '0',
           background: 'rgba(1, 1, 1, 0.7)',
           borderRadius: '8px',
           padding: '10px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: '15px'
+          gap: 'clamp(5px, 1vw, 15px)', // Responsive gap
+          minHeight: '80px',
+          overflow: 'hidden' // Prevent overflow
         }}>
           
           {/* Left Side - Sound Controls */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: 'clamp(5px, 0.8vw, 10px)', // Responsive gap
+            minWidth: 'fit-content',
+            flexShrink: 0 // Prevent shrinking
+          }}>
             <button
               onClick={toggleMute}
               style={{
@@ -184,14 +208,14 @@ const VideoPlayer = ({
                 border: 'none',
                 color: 'white',
                 cursor: 'pointer',
-                padding: '20px',
+                padding: 'clamp(8px, 1.2vw, 15px)', // Responsive padding
                 borderRadius: '8px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 transition: 'all 0.2s',
-                minWidth: '60px',
-                minHeight: '60px'
+                minWidth: 'clamp(35px, 4vw, 50px)', // Responsive size
+                minHeight: 'clamp(35px, 4vw, 50px)'
               }}
               onMouseEnter={(e) => {
                 e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
@@ -210,7 +234,11 @@ const VideoPlayer = ({
               max="100"
               value={isMuted ? 0 : volume * 100}
               onChange={handleVolumeChange}
-              style={{ width: '80px' }}
+              style={{ 
+                width: 'clamp(50px, 6vw, 80px)', // More compact responsive width
+                minWidth: '50px',
+                flexShrink: 0
+              }}
             />
           </div>
 
@@ -219,10 +247,17 @@ const VideoPlayer = ({
             flex: 1, 
             display: 'flex', 
             alignItems: 'center', 
-            gap: '10px',
-            margin: '0 20px'
+            gap: 'clamp(5px, 0.8vw, 10px)', // Responsive gap
+            margin: '0 clamp(8px, 1.5vw, 20px)', // Responsive margin
+            minWidth: '150px' // Reduced minimum width
           }}>
-            <span style={{ color: 'white', fontSize: '12px', minWidth: '40px' }}>
+            <span style={{ 
+              color: 'white', 
+              fontSize: 'clamp(9px, 1vw, 12px)', // Smaller responsive font
+              minWidth: 'clamp(30px, 3vw, 40px)', // Responsive width
+              textAlign: 'center',
+              flexShrink: 0
+            }}>
               {formatTime(currentTime)}
             </span>
             <input
@@ -236,16 +271,29 @@ const VideoPlayer = ({
                 height: '6px',
                 background: '#333',
                 outline: 'none',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                minWidth: '80px' // Reduced minimum width
               }}
             />
-            <span style={{ color: 'white', fontSize: '12px', minWidth: '40px' }}>
+            <span style={{ 
+              color: 'white', 
+              fontSize: 'clamp(9px, 1vw, 12px)', // Smaller responsive font
+              minWidth: 'clamp(30px, 3vw, 40px)', // Responsive width
+              textAlign: 'center',
+              flexShrink: 0
+            }}>
               {formatTime(duration)}
             </span>
           </div>
 
           {/* Right Side - Playback Controls */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0px' }}>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: 'clamp(0px, 0.3vw, 2px)', // Very small responsive gap
+            minWidth: 'fit-content',
+            flexShrink: 0 // Prevent shrinking
+          }}>
             <button 
               onClick={skipBackward}
               style={{
@@ -253,14 +301,14 @@ const VideoPlayer = ({
                 border: 'none',
                 color: 'white',
                 cursor: 'pointer',
-                padding: '2px',
+                padding: 'clamp(1px, 0.3vw, 2px)', // Responsive padding
                 borderRadius: '4px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 transition: 'all 0.2s',
-                minWidth: '32px',
-                minHeight: '32px'
+                minWidth: 'clamp(24px, 2.5vw, 32px)', // Responsive size
+                minHeight: 'clamp(24px, 2.5vw, 32px)'
               }}
               onMouseEnter={(e) => {
                 e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
@@ -283,14 +331,14 @@ const VideoPlayer = ({
                 border: 'none',
                 color: 'white',
                 cursor: 'pointer',
-                padding: '2px',
+                padding: 'clamp(1px, 0.3vw, 2px)',
                 borderRadius: '4px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 transition: 'all 0.2s',
-                minWidth: '32px',
-                minHeight: '32px'
+                minWidth: 'clamp(24px, 2.5vw, 32px)',
+                minHeight: 'clamp(24px, 2.5vw, 32px)'
               }}
               onMouseEnter={(e) => {
                 e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
@@ -313,14 +361,14 @@ const VideoPlayer = ({
                 border: 'none',
                 color: 'white',
                 cursor: 'pointer',
-                padding: '2px',
+                padding: 'clamp(1px, 0.3vw, 2px)',
                 borderRadius: '4px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 transition: 'all 0.2s',
-                minWidth: '32px',
-                minHeight: '32px'
+                minWidth: 'clamp(24px, 2.5vw, 32px)',
+                minHeight: 'clamp(24px, 2.5vw, 32px)'
               }}
               onMouseEnter={(e) => {
                 e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
@@ -340,15 +388,15 @@ const VideoPlayer = ({
                 border: 'none',
                 color: 'white',
                 cursor: 'pointer',
-                padding: '2px',
+                padding: 'clamp(1px, 0.3vw, 2px)',
                 borderRadius: '4px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 transition: 'all 0.2s',
-                minWidth: '32px',
-                minHeight: '32px',
-                marginRight: '16px'
+                minWidth: 'clamp(24px, 2.5vw, 32px)',
+                minHeight: 'clamp(24px, 2.5vw, 32px)',
+                marginRight: 'clamp(8px, 1.2vw, 16px)' // Responsive margin
               }}
               onMouseEnter={(e) => {
                 e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
@@ -368,14 +416,14 @@ const VideoPlayer = ({
                 border: 'none',
                 color: 'white',
                 cursor: 'pointer',
-                padding: '8px',
+                padding: 'clamp(6px, 1vw, 8px)', // Responsive padding
                 borderRadius: '8px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 transition: 'all 0.2s',
-                minWidth: '60px',
-                minHeight: '60px'
+                minWidth: 'clamp(40px, 4vw, 50px)', // Responsive size
+                minHeight: 'clamp(40px, 4vw, 50px)'
               }}
               onMouseEnter={(e) => {
                 e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
