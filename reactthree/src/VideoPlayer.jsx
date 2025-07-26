@@ -147,27 +147,37 @@ const VideoPlayer = ({
         maxWidth: maxWidth,
         width: '100%',
         boxSizing: 'border-box',
+        height: '100vh', // Use full viewport height
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden', // Prevent overflow
         ...style 
       }}
     >
-      <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>{title}</h2>
+      <h2 style={{ 
+        textAlign: 'center', 
+        marginBottom: '20px',
+        flexShrink: 0 // Prevent title from shrinking
+      }}>{title}</h2>
+      
       <div style={{ 
         position: 'relative', 
         width: '100%',
-        aspectRatio: aspectRatio,
-        maxWidth: '100%',
-        margin: '0 auto'
+        flex: 1, // Take remaining space
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: 0 // Allow shrinking
       }}>
         <video 
           ref={videoRef}
           style={{ 
             width: '100%',
-            height: '100%',
-            objectFit: 'contain', // Ensures video maintains aspect ratio and fits within container
+            height: 'calc(100% - 100px)', // Reserve space for controls
+            objectFit: 'contain',
             border: '2px solid #646cff',
             borderRadius: '8px',
             display: 'block',
-            backgroundColor: '#000' // Black background for letterboxing if needed
+            backgroundColor: '#000'
           }}
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
@@ -176,10 +186,10 @@ const VideoPlayer = ({
           Your browser does not support the video tag.
         </video>
         
-        {/* Custom Controls Bar */}
+        {/* Custom Controls Bar - Fixed positioning */}
         <div style={{
           position: 'absolute',
-          bottom: '-130px',
+          bottom: '10px', // Changed from -130px to 10px
           left: '0',
           right: '0',
           background: 'rgba(1, 1, 1, 0.7)',
@@ -188,9 +198,9 @@ const VideoPlayer = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: 'clamp(5px, 1vw, 15px)', // Responsive gap
-          minHeight: '80px',
-          overflow: 'hidden' // Prevent overflow
+          gap: 'clamp(5px, 1vw, 15px)',
+          minHeight: '60px', // Reduced from 80px
+          overflow: 'hidden'
         }}>
           
           {/* Left Side - Sound Controls */}

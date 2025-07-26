@@ -13,6 +13,25 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Hide scrollbars globally */
+html, body {
+  overflow: hidden; /* Completely hide scrollbars */
+}
+
+/* Alternative: Hide scrollbars but keep scroll functionality */
+/*
+html {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+html::-webkit-scrollbar { 
+  display: none; /* WebKit browsers */
+}
+body {
+  overflow-x: hidden; /* Hide horizontal scrollbar only */
+}
+*/
+
 a {
   font-weight: 500;
   color: #646cff;
